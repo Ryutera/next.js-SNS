@@ -1,4 +1,4 @@
- "use server"
+'use server';
 
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
@@ -64,3 +64,44 @@ export async function addPostAction(prevState: State, formData:FormData):Promise
     // 以上のようにオブジェクト形式でエラーを返すのはあとで扱いやすくなるので一般的に推奨される書き方
     // 実際にsetErrorに格納するときに使っている
   }}
+
+
+export  const likeAction =async(postId:string)=>{
+
+    const {userId} = auth()
+   
+    if (!userId) {
+        throw new Error("User is not authenticated")
+        
+    }
+    try{
+        const existingLike = await prisma.like.findFirst({
+            where:{
+                postId,
+                userId,
+            }
+        })
+
+       if (existingLike) {
+        await prisma.like.delete({
+            where:{
+                id:existingLike.id,
+            },
+        })
+
+       
+        
+       }else{
+        await prisma.like.create({
+            data:{
+                postId,
+                userId,
+            }
+        })
+       }
+       revalidatePath("/")
+        
+    }catch(err){
+console.log(err)
+    }
+}

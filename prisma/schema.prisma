@@ -58,9 +58,9 @@ model Reply {
 }
 
 model Follow {
-  follower    User     @relation("Following", fields: [followerId], references: [id])
+  follower    User     @relation("Following", fields: [followerId], references: [clerkId]) // clerkId を参照
   followerId  String
-  following   User     @relation("FollowedBy", fields: [followingId], references: [id])
+  following   User     @relation("FollowedBy", fields: [followingId], references: [clerkId]) // clerkId を参照
   followingId String
   createdAt   DateTime @default(now())
 
