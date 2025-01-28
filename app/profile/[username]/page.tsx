@@ -33,7 +33,7 @@ export default async function ProfilePage({params,}:{params:{username: string}})
 
         }
       },
-      following :{
+      followedBy:{
         where:{
           followerId:currentUserId
         }
@@ -46,10 +46,13 @@ export default async function ProfilePage({params,}:{params:{username: string}})
     
   }
 
+
   const isCurrentUser = currentUserId ===user.clerkId
-const isFollowing =  user.following.length > 0
+const isFollowing =  user.followedBy.length > 0
 
-
+console.log(currentUserId)
+console.log(isCurrentUser)
+console.log(isFollowing)
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
@@ -104,7 +107,7 @@ const isFollowing =  user.following.length > 0
 
             
             
-              <FollowButton isCurrentUser={isCurrentUser} isFollowing={isFollowing}/>
+              <FollowButton isCurrentUser={isCurrentUser} user={user} isFollowing={isFollowing}/>
              
               <div>
                 <h3 className="text-lg font-bold">Suggested</h3>

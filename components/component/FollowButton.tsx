@@ -1,12 +1,15 @@
 import React from "react";
 import { Button } from "../ui/button";
+import { prisma } from "@/lib/prisma";
+import { followAction } from "@/lib/actions";
 
 interface FollowButtonProps {
   isCurrentUser: boolean;
+  user:any;
   isFollowing: boolean;
 }
 
-const FollowButton: React.FC<FollowButtonProps> = ({ isCurrentUser, isFollowing }) => {
+const FollowButton: React.FC<FollowButtonProps> = ({ isCurrentUser, isFollowing ,user}) => {
   // ボタンのテキストを取得する関数
   const getButtonContent = () => {
     if (isCurrentUser) {
@@ -14,9 +17,9 @@ const FollowButton: React.FC<FollowButtonProps> = ({ isCurrentUser, isFollowing 
     }
     if (isFollowing) {
       return "フォロー中";
-    } else {
+    } 
       return "フォローする";
-    }
+    
   };
 
   // ボタンのデザインバリアントを取得する関数
@@ -26,17 +29,22 @@ const FollowButton: React.FC<FollowButtonProps> = ({ isCurrentUser, isFollowing 
     }
     if (isFollowing) {
       return "outline"; // 修正: "autoline" は存在しないため "outline" を使用
-    } else {
+    } 
       return "default";
-    }
+    
   };
 
+
+
   return (
-    <div>
+    
+// サーバーアクションの関数に引数を渡すのは直接できない,bindを使う必要がある
+        <form action={followAction.bind(null,user)}>
       <Button variant={getButtonVariant()} className="w-full">
         {getButtonContent()}
       </Button>
-    </div>
+      </form>
+   
   );
 };
 
