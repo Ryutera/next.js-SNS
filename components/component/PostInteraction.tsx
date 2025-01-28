@@ -7,6 +7,7 @@ import { auth } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 import { likeAction } from '@/lib/actions';
 import { boolean } from 'zod';
+import { Anek_Gujarati } from 'next/font/google';
 type PostInteractionProps= {
     postId:string
     initialLikes:string[];
@@ -24,7 +25,7 @@ interface LikeState{
 const PostInteraction = ({postId,initialLikes,commentNumber,userId}:PostInteractionProps) => {
 // authでuserId呼ぶとクライアントで使えないってエラー出るからpostから持ってきているけどこれでちゃんと楽観的UIが機能しているのかは謎、パソコンが重くてわからん本体はここでauth()使うみたいだけど
 
-
+// const {userId } = auth()
 // const [likeState, setLikeState] = useState({likeCount:initialLikes.length,isLiked:userId? initialLikes.includes(userId):false})
 
 const initialState={likeCount:initialLikes.length,isLiked:userId? initialLikes.includes(userId):false}
@@ -45,15 +46,23 @@ const[ optimisticLike, addOptimisticLike]=useOptimistic< LikeState,void>(initial
             //     isLiked: !prev.isLiked
             // }))
             await likeAction(postId)
+        
             
         }catch(err){
             // setLikeState((prev)=>({
             //     likeCount:prev.isLiked?prev.likeCount +1 :prev.likeCount -1,
             //     isLiked: !prev.isLiked
             // }))
+           
+
             console.log(err)
         }
+       
+
+      
     }
+
+    
   return (
     <div className='flex items-center'>
         <form action={handleLikeSubmit}>
