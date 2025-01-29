@@ -10,6 +10,9 @@ import {
   HeartIcon,
   SettingsIcon,
 } from "./Icons";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
+
 
 const navItems = [
   { icon: HomeIcon, label: "Home", href: "/" },
@@ -20,17 +23,31 @@ const navItems = [
   { icon: HeartIcon, label: "Likes", href: "/likes" },
 ];
 
-export default function LeftSidebar() {
+export default async function LeftSidebar() {
+
+  const {userId} = auth()
+  const currentUser = await prisma.user.findUnique({
+    where:{
+      clerkId:userId || undefined
+    },select:{
+      username:true,
+      name:true,
+      image:true
+    }
+  })
+
+
+
   return (
     <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg shadow-md p-4 h-full flex flex-col">
       <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
         <Avatar className="w-12 h-12">
-          <AvatarImage src="/placeholder-user.jpg" />
+          <AvatarImage src={currentUser?.image || undefined}/>
           <AvatarFallback>JD</AvatarFallback>
         </Avatar>
         <div>
-          <h3 className="text-lg font-bold">John Doe</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">@johndoe</p>
+          <h3 className="text-lg font-bold">{currentUser?.name}</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{`@${currentUser?.name}`}</p>
         </div>
       </div>
       <nav className="flex-grow">
